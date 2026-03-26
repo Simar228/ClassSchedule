@@ -1,4 +1,8 @@
 package com.example.classschedule.Presentation.Main.lessons
 
-class LessonsScreen {
+import androidx.compose.runtime.Composable
+
+
+@Composable
+fun LessonsScreen() {
 }
