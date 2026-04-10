@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Class
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -37,7 +38,6 @@ private val navItems = listOf(
 
 @Composable
 fun MyBottomNavigation(navController: NavController)  {
-    var selectedIndex by remember { mutableIntStateOf(0) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination
     NavigationBar() {
@@ -58,11 +58,18 @@ fun MyBottomNavigation(navController: NavController)  {
                 icon = {
                     Icon(
                         modifier = Modifier.size(50.dp),
-                        tint = Color.Black,
                         imageVector = item.icon,
                         contentDescription = null
                     )
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+
+                    indicatorColor = Color.Yellow,
+                    selectedIconColor = Color.Black,
+                    unselectedIconColor = Color.Gray,
+                    selectedTextColor = Color.Black,
+                    unselectedTextColor = Color.Gray
+                )
 
             )
         }

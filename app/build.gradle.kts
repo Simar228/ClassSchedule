@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.coreLibraryDesugaring
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -13,6 +15,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        multiDexEnabled = true
         applicationId = "com.example.classschedule"
         minSdk = 24
         targetSdk = 36

@@ -6,6 +6,7 @@ import com.example.classschedule.Domain.entity.toUserForDataBase
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
@@ -27,7 +28,6 @@ class AuthRepository@Inject constructor(
                     put("name", name)
                     put("surname", surname)
                 }
-
             }
             val user = supabaseClient.auth.currentUserOrNull()
 

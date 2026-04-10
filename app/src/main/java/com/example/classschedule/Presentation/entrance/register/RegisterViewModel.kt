@@ -125,7 +125,7 @@ class RegisterViewModel @AssistedInject constructor(
          if(
              Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
              &&
-             state.value.password.length >= 6
+             state.value.password.length >= 5
              &&
              state.value.surname.isNotBlank()
              &&

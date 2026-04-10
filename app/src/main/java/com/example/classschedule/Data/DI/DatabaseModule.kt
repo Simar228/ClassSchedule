@@ -25,4 +25,6 @@ object DatabaseModule {
     fun provideUserDao(userDatabase: UserDatabase): UserDao{
         return userDatabase.getUserDao()
     }
+
+
 }

@@ -132,7 +132,7 @@ class DefaultEntranceViewModel @AssistedInject constructor(
         if(
             Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
             &&
-            state.value.password.length >= 6
+            state.value.password.length >= 5
         ){
             _state.update { it.copy(canNavigateToMainScreen = true) }
         }
