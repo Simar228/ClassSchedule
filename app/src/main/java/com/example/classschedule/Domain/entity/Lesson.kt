@@ -24,7 +24,7 @@ fun LessonDto.toLesson() : Lesson{
         lessonTopic = this.lessonTopic,
         lessonHomeWork = this.lessonHomeWork,
         lessonId = this.lessonId,
-        grade = null
+        grade = this.grades.firstOrNull()?.grade
     )
 }
 

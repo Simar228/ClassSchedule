@@ -13,6 +13,7 @@ data class LessonDto(
     @SerialName("lesson_home_work") val lessonHomeWork: String,
     @SerialName("lesson_id") val lessonId: Int,
     @SerialName("date") val date: Int,
+    @SerialName("grades")val grades: List<GradeDto> = emptyList()
 
 )
 @Serializable

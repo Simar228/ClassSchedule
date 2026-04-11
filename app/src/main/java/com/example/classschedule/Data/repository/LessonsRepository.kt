@@ -25,48 +25,18 @@ class LessonsRepository@Inject constructor(
     val lessonsState: StateFlow<List<Lesson>> = _lessonsState.asStateFlow()
     suspend fun getLesson(date: Int): Result<Unit> {
         return runCatching {
-            try {
-
-
-                val oldLessons = supabaseClient.from("lesson_topic").select(
-
+                val userId = userDao.getUser()?.id
+                val lessons = supabaseClient.from("lesson_topic").select(
                columns = Columns.raw("""
-                   *, subjects(title)
+                   *, subjects(title),
+                   grades(value).filter(student_id.eq.'$userId')
                     """)
            ){
                     filter {
                         LessonDto::date eq date
                     }
                 }.decodeList<LessonDto>()
-                val newLessons = oldLessons.map {
-                    it.toLesson()
-                }
-
-
-                val grades = try {
-                    val userId = userDao.getUser()?.id
-                    if (userId != null) {
-                        supabaseClient.from("grades").select {
-                            filter {
-                                GradeDto::studentId eq userId
-                                GradeDto::date eq date
-                            }
-                        }.decodeList<GradeDto>()
-                    } else emptyList()
-                } catch (e: Exception) {
-                    Log.d("gradesE", e.toString())
-                    emptyList<GradeDto>()
-                }
-                val gradesMap = grades.associateBy { it.lessonId }
-                val updatedLessons = newLessons.map { lesson ->
-                    val gradeForThisLesson = gradesMap[lesson.lessonId]?.grade
-                    lesson.copy(grade = gradeForThisLesson)
-                }
-                _lessonsState.value = updatedLessons.toList()
-
-            } catch (e: Exception) {
-                Log.d("LessonsE", e.toString())
-            }
+                _lessonsState.value = lessons.map { it.toLesson() }
         }
     }
 }

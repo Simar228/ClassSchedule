@@ -17,22 +17,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LessonsViewModel @Inject constructor(
-    // Все зависимости (репозитории) должны быть ТУТ в скобках
     private val lessonsRepository: LessonsRepository
 ) : ViewModel(){
 
 
     val lessons = lessonsRepository.lessonsState
+    val calendar = java.util.Calendar.getInstance()
+    val dayOfMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
 
     fun getLesson(date: Int){
         viewModelScope.launch(Dispatchers.IO) {
-        lessonsRepository.getLesson(date)
+        val getLessons = lessonsRepository.getLesson(date)
+            getLessons.onFailure{ e ->
+                Log.e("Get Lessons", e.toString())
+            }
         }
         return
     }
-    val calendar = java.util.Calendar.getInstance()
-    val daysInMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
-    val dayOfMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
-    val dayOfWeek = (calendar.get(java.util.Calendar.DAY_OF_WEEK))
+
+
 
 }
