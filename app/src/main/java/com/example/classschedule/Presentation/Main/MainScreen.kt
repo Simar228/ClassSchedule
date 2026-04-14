@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
 import com.example.classschedule.Presentation.Main.generalEstimates.GeneralEstimatesScreen
+import com.example.classschedule.Presentation.Main.grades.GradesScreen
 import com.example.classschedule.Presentation.Main.lessons.LessonsScreen
 import com.example.classschedule.Presentation.navigation.Screen
 import com.example.classschedule.Presentation.util.bottomNavigation.MainScreenNavigationRoute
@@ -37,7 +38,7 @@ fun MainScreen(){
                 LessonsScreen()
             }
             composable <MainScreenNavigationRoute.GeneralEstimatesScreen>{
-                GeneralEstimatesScreen()
+                GradesScreen()
             }
         }
 
