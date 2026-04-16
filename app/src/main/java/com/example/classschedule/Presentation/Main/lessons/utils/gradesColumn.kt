@@ -57,7 +57,7 @@ fun SubjectsNameColumn( grades: List<Map<Int, Int>> = emptyList()) {
             }
         }
         items(31) { index ->
-            GradesColumn(grades[index], index + 1, commonScrollState)
+            GradesColumn(grades.getOrElse(index) { emptyMap() }, index + 1, commonScrollState)
 
         }
     }
@@ -121,7 +121,7 @@ fun GradesColumn(grades: Map<Int, Int>, date: Int, scrollState: ScrollState){
             modifier = Modifier.padding(bottom = 16.dp)
         )
      SubjectEnum.entries.forEachIndexed { index, subject ->
-            val gradeValue = grades[subject.id]
+            val gradeValue = grades.getOrDefault(subject.id, null)
             Surface(modifier = Modifier,
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
