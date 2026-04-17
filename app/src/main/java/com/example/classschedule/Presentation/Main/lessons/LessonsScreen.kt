@@ -18,8 +18,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -29,9 +34,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.repository.LessonsRepository
+import com.example.classschedule.Domain.entity.Lesson
 import com.example.classschedule.Presentation.ui.utils.LessonCard
 import com.example.classschedule.Presentation.ui.utils.StyleButton
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlin.collections.mutableListOf
 
 
 @Composable
@@ -48,8 +57,11 @@ private fun LessonsView(
     viewModel: LessonsViewModel
 ) {
 
+
+    var isLoadingLessonList by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     var  lessonsRepository : LessonsRepository
-    val lessons by viewModel.lessons.collectAsStateWithLifecycle()
+    val currentLesson = viewModel.currentLesson
     //с какой даты начать
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = viewModel.dayOfMonth - 1
@@ -68,7 +80,11 @@ private fun LessonsView(
     val itemWidth = 70.dp
     // Расчет пустого пространства по бокам, чтобы элемент мог встать ровно по центру
     val horizontalPadding = (screenWidth - itemWidth) / 2
+    // Для текущего  дня список уроков
     viewModel.getLesson(viewModel.dayOfMonth)
+
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -89,10 +105,12 @@ private fun LessonsView(
                 items(31){_index ->
                     val index = _index + 1
                     Button(
+                        enabled = !isLoadingLessonList,
                         shape = RoundedCornerShape(12.dp),
-                        enabled = true,
                         modifier = Modifier.size(itemWidth),
-                        onClick = { viewModel.getLesson(index) }
+                        onClick = {
+                            viewModel.getLesson(index)
+                        }
                     ) {
                         Text(text = index.toString())
                     }
@@ -100,7 +118,7 @@ private fun LessonsView(
                 }
             }
         }
-        items(lessons){lesson ->
+        items(currentLesson){lesson ->
           LessonCard(
               lessonName = lesson.lessonName,
               lessonTopic = lesson.lessonTopic,

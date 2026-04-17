@@ -21,22 +21,26 @@ class LessonsRepository@Inject constructor(
     val userDao: UserDao,
 
 ) {
-    private val _lessonsState: MutableStateFlow<List<Lesson>> = MutableStateFlow<List<Lesson>>(emptyList())
-    val lessonsState: StateFlow<List<Lesson>> = _lessonsState.asStateFlow()
-    suspend fun getLesson(date: Int): Result<Unit> {
+
+    suspend fun getLesson(date: Int): Result<List<Lesson>> {
         return runCatching {
-                val userId = userDao.getUser()?.id
-                val lessons = supabaseClient.from("lesson_topic").select(
-               columns = Columns.raw("""
+            val userId = userDao.getUser()?.id
+            val lessons = supabaseClient.from("lesson_topic").select(
+                columns = Columns.raw(
+                    """
                    *, subjects(title),
                    grades(value).filter(student_id.eq.'$userId')
-                    """)
-           ){
-                    filter {
-                        LessonDto::date eq date
-                    }
-                }.decodeList<LessonDto>()
-                _lessonsState.value = lessons.map { it.toLesson() }
+                    """
+                )
+            ) {
+                filter {
+                    LessonDto::date eq date
+                }
+            }.decodeList<LessonDto>()
+            lessons.map {
+                it.toLesson()
+            }
         }
     }
 }
+

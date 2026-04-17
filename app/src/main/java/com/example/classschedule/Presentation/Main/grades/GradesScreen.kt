@@ -25,19 +25,19 @@ import kotlinx.coroutines.async
 @Composable
 fun GradesScreen(){
     val viewModel : GradesViewModel = hiltViewModel<GradesViewModel>()
-    viewGradeScreen(viewModel)
+    ViewGradeScreen(viewModel)
 
 }
 
 
 @Composable
-fun viewGradeScreen(
+fun ViewGradeScreen(
     viewModel: GradesViewModel
 ){
     var gradesList by remember { mutableStateOf<List<Map<Int, Int>>>(emptyList())}
     LaunchedEffect(Unit) {
-        val result = viewModel.getGrades()
-        gradesList = result
+        gradesList = viewModel.getGrades()
+
     }
     SubjectsNameColumn(
         gradesList

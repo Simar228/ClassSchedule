@@ -1,11 +1,13 @@
 package com.example.classschedule.Presentation.Main.grades
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.dto.GradeDto
 import com.example.classschedule.Data.dto.ToGradeList
 import com.example.classschedule.Data.dto.ToPairList
+import com.example.classschedule.Data.repository.GradesRepository
 import com.example.classschedule.Domain.dao.UserDao
 import com.example.classschedule.Domain.entity.Grade
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,29 +20,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GradesViewModel @Inject constructor(
-    private val supabaseClient: SupabaseClient,
-    private val userDao: UserDao
+    private val gradesRepository: GradesRepository
 ) : ViewModel() {
 
 
-
-    suspend fun getGrades() : List<Map<Int, Int>>{
-        val userId = userDao.getUser()?.id ?: return emptyList<Map<Int, Int>>()
-
-
-        val gradesDto =  supabaseClient.from("grades").select(
-            columns = Columns.raw("""
-                *, lesson_topic(lesson_id, date)
-            """
-            )
-        ) {
-
-            filter {
-                eq("student_id", userId)
-            }
-        }.decodeList<GradeDto>()
-        val grades =  gradesDto.map { it.ToGradeList() }
-        return grades.ToPairList()
+    suspend fun getGrades(): List<Map<Int, Int>> {
+        return gradesRepository.getGrades()
+            .onFailure { Log.e("GradesError", it.toString()) }
+            .getOrElse { emptyList() }
     }
+
 }
 
