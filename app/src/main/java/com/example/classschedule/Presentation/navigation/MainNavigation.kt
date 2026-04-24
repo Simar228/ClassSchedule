@@ -1,10 +1,14 @@
 package com.example.classschedule.Presentation.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.classschedule.Data.util.IsInternetAvailable
+import com.example.classschedule.Data.util.NetworkMonitor
 import com.example.classschedule.Presentation.Main.MainScreen
 import com.example.classschedule.Presentation.entrance.defualtEntrance.DefualtEntranceScreen
 import com.example.classschedule.Presentation.entrance.register.RegisterScreen
@@ -12,16 +16,17 @@ import com.example.classschedule.Presentation.utilScreen.NoInternetScreen
 
 @Composable
 fun MainNav(
-    onRetry: () -> Unit,
     startScreen: Screen,
     navHostController : NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    context: Context
 ){
 
     NavHost(
         navController = navHostController,
         startDestination = startScreen
     ){
+
         composable<Screen.Register> {
             RegisterScreen { navigateTo ->
                 navHostController.navigate(navigateTo)
@@ -35,7 +40,13 @@ fun MainNav(
                 navHostController.navigate(navigateTo) }
         }
         composable<Screen.NoInternet> {
-            NoInternetScreen { onRetry() }
+            NoInternetScreen() {
+                val isOnline = IsInternetAvailable(context)
+                if(isOnline){
+                    NetworkMonitor.statusInternet(true)
+                    navHostController.popBackStack()
+                }
+            }
         }
     }
 

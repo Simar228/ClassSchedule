@@ -109,6 +109,7 @@ private fun LessonsView(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.size(itemWidth),
                         onClick = {
+                            viewModel.dayOfMonth = index
                             viewModel.getLesson(index)
                         }
                     ) {

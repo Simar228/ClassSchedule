@@ -1,5 +1,6 @@
 package com.example.classschedule.Presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,10 +25,13 @@ import com.example.classschedule.Presentation.ui.theme.ClassScheduleTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.Data.util.IsInternetAvailable
+import com.example.classschedule.Data.util.NetworkMonitor
 import javax.inject.Inject
 
 
@@ -48,8 +52,15 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 var startScreen by remember { mutableStateOf<Screen?>(null) }
                 var retryTrigger by remember { mutableIntStateOf(0) }
+                val isOnline by NetworkMonitor.isAvailable.collectAsStateWithLifecycle()
                 splashScreen.setKeepOnScreenCondition {
                     startScreen == null
+                }
+
+                LaunchedEffect(isOnline) {
+                    if(!isOnline){
+                        navController.navigate(Screen.NoInternet)
+                    }
                 }
 
                 LaunchedEffect(retryTrigger) {
@@ -63,13 +74,10 @@ class MainActivity : ComponentActivity() {
                     if (startScreen != null) {
 
                         MainContent(
-                            onRetry = {
-                                startScreen = null
-                                retryTrigger++
-                            },
                             startScreen = startScreen!!,
                             modifier = Modifier.padding(innerPadding),
-                            navHostController = navController
+                            navHostController = navController,
+                            context = this@MainActivity
                         )
 
                 }else {
@@ -92,8 +100,6 @@ class MainActivity : ComponentActivity() {
 
 
     suspend fun tryEnter(): Screen {
-        val isInternetAvailable = IsInternetAvailable(this)
-        if (!isInternetAvailable) return Screen.NoInternet
         val user = userDao.getUser() ?: return Screen.DefaultEntrance
         val stateLogin = authRepository.login(user.email, user.password)
         return stateLogin.fold(
@@ -111,12 +117,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainContent(
-    onRetry: () -> Unit,
     modifier: Modifier,
     navHostController: NavHostController,
-    startScreen: Screen
+    startScreen: Screen,
+    context: Context,
 ){
-    MainNav(onRetry, startScreen, navHostController)
+    MainNav(startScreen, navHostController, context = context)
 }
 
 

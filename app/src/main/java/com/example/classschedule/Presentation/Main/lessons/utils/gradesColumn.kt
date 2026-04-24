@@ -60,6 +60,12 @@ fun SubjectsNameColumn( grades: List<Map<Int, Int>> = emptyList()) {
             GradesColumn(grades.getOrElse(index) { emptyMap() }, index + 1, commonScrollState)
 
         }
+        item {
+            val meanGrade = grades.flatMap { it.entries }
+                .groupBy ({it.key}, {it.value})
+                .mapValues { it.value.average() }
+            GradesColumn(meanGrade, commonScrollState)
+        }
     }
 }
 
@@ -107,7 +113,7 @@ fun SubjectItem(subject: SubjectEnum) {
     }
 }
 
-
+//для оценок обычного дня
 @Composable
 fun GradesColumn(grades: Map<Int, Int>, date: Int, scrollState: ScrollState){
     Column(modifier = Modifier
@@ -121,12 +127,46 @@ fun GradesColumn(grades: Map<Int, Int>, date: Int, scrollState: ScrollState){
             modifier = Modifier.padding(bottom = 16.dp)
         )
      SubjectEnum.entries.forEachIndexed { index, subject ->
-            val gradeValue = grades.getOrDefault(subject.id, null)
+            val gradeValue = grades.getOrDefault(subject.id, "")
             Surface(modifier = Modifier,
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                 tonalElevation = 2.dp
                 ){
+                Box(modifier = Modifier
+                    .padding(16.dp)
+                    .size(sizeCard),
+                    contentAlignment = Alignment.Center) {
+                    Text(text = gradeValue.toString())
+                }
+            }
+
+        }
+
+    }
+}
+
+//для средней четвертной оценки
+
+@Composable
+fun GradesColumn(grades: Map<Int, Double>, scrollState: ScrollState){
+    Column(modifier = Modifier
+        .fillMaxHeight()
+        .padding(top = 16.dp, bottom = 16.dp, end = 16.dp)
+        .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(arrangmentBetweenCard)) {
+        Text(text = "Четвертная",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        SubjectEnum.entries.forEachIndexed { index, subject ->
+            val gradeValue = grades.getOrDefault(subject.id, "")
+            Surface(modifier = Modifier,
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                tonalElevation = 2.dp
+            ){
                 Box(modifier = Modifier
                     .padding(16.dp)
                     .size(sizeCard),

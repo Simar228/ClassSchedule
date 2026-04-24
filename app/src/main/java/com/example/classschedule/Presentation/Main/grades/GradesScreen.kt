@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.Presentation.Main.lessons.utils.GradesColumn
 import com.example.classschedule.Presentation.Main.lessons.utils.SubjectsNameColumn
 import kotlinx.coroutines.async
@@ -34,11 +35,8 @@ fun GradesScreen(){
 fun ViewGradeScreen(
     viewModel: GradesViewModel
 ){
-    var gradesList by remember { mutableStateOf<List<Map<Int, Int>>>(emptyList())}
-    LaunchedEffect(Unit) {
-        gradesList = viewModel.getGrades()
+    val gradesList by viewModel.grades.collectAsStateWithLifecycle()
 
-    }
     SubjectsNameColumn(
         gradesList
     )
