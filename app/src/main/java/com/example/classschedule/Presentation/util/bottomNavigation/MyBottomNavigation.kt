@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Class
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -32,6 +33,11 @@ private val navItems = listOf(
         icon = Icons.Default.BarChart,
         titleResId = 0,
         route = MainScreenNavigationRoute.GeneralEstimatesScreen
+    ),
+    BottomNavItem(
+        icon = Icons.Default.PersonOutline,
+        titleResId = 0,
+        route = MainScreenNavigationRoute.ProfileScreen
     )
 )
 

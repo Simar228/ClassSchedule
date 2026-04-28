@@ -1,4 +1,4 @@
-package com.example.classschedule.Presentation.Main.lessons
+package com.example.classschedule.Presentation.main.lessons
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
@@ -16,22 +16,26 @@ import javax.inject.Inject
 @HiltViewModel
 class LessonsViewModel @Inject constructor(
     private val lessonsRepository: LessonsRepository
-) : ViewModel(){
+) : ViewModel() {
 
 
-    private var fetchJob : Job? = null
+    private var fetchJob: Job? = null
     private var _currentLesson = mutableStateListOf<Lesson>()
     val currentLesson = _currentLesson
     val calendar = java.util.Calendar.getInstance()
     var dayOfMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
 
-    private suspend fun getLessonViewModel(date: Int) : List<Lesson>{
-        val lessons = lessonsRepository.getLesson(date)
-        lessons.suppabaseErrorHandler(tag = "lessons") {  }
-        return lessons.getOrElse { emptyList() }
-        }
+    init {
+        getLesson(dayOfMonth)
+    }
 
-    fun getLesson(date: Int){
+    private suspend fun getLessonViewModel(date: Int): List<Lesson> {
+        val lessons = lessonsRepository.getLesson(date)
+        lessons.suppabaseErrorHandler(tag = "lessons") { }
+        return lessons.getOrElse { emptyList() }
+    }
+
+    fun getLesson(date: Int) {
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch(context = Dispatchers.IO) {
             val lessons = getLessonViewModel(date).toMutableStateList()
@@ -39,8 +43,6 @@ class LessonsViewModel @Inject constructor(
             _currentLesson.addAll(lessons)
         }
     }
-
-
 
 
 }

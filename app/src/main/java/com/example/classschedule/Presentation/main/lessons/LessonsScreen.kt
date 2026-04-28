@@ -1,10 +1,9 @@
-package com.example.classschedule.Presentation.Main.lessons
+package com.example.classschedule.Presentation.main.lessons
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,16 +28,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.repository.LessonsRepository
-import com.example.classschedule.Domain.entity.Lesson
 import com.example.classschedule.Presentation.ui.utils.LessonCard
-import com.example.classschedule.Presentation.ui.utils.StyleButton
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlin.collections.mutableListOf
 
 
 @Composable
@@ -80,8 +70,6 @@ private fun LessonsView(
     val itemWidth = 70.dp
     // Расчет пустого пространства по бокам, чтобы элемент мог встать ровно по центру
     val horizontalPadding = (screenWidth - itemWidth) / 2
-    // Для текущего  дня список уроков
-    viewModel.getLesson(viewModel.dayOfMonth)
 
 
 

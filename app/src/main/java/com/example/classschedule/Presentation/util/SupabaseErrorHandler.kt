@@ -9,18 +9,24 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import java.net.ConnectException
 import java.net.UnknownHostException
 
-fun <T> Result<T>.suppabaseErrorHandler(onFailure: () -> Unit = {}, tag : String = "Supabase", onSuccess : () -> Unit = {}) : UiText {
+fun <T> Result<T>.suppabaseErrorHandler(
+    onFailure: () -> Unit = {},
+    tag: String = "Supabase",
+    onSuccess: () -> Unit = {}
+): UiText {
 
 
     this.onFailure { exception ->
-        Log.e(tag, exception.toString())
+        Log.e(tag, "Network error: ${exception.javaClass.simpleName} | Message: ${exception.message}")
+        Log.e(tag, "StackTrace:", exception)
         onFailure()
         when (exception) {
 
             is ConnectException,
             is UnknownHostException,
             is HttpRequestTimeoutException,
-            is HttpRequestException-> {
+            is HttpRequestException -> {
+                Log.e(tag, "FAILED REQUEST URL: ${exception.cause?.message ?: "Check App Inspection for URL"}")
                 NetworkMonitor.statusInternet(false)
                 return UiText.Resource(R.string.invalid_internet)
             }
@@ -49,6 +55,7 @@ fun <T> Result<T>.suppabaseErrorHandler(onFailure: () -> Unit = {}, tag : String
         onSuccess()
 
     }
+    Log.e("Supabase", "Произошел запрос от $tag  успех: = ${this.isSuccess}, крах: = ${this.isFailure}")
 
 
     return UiText.DynamicString("")

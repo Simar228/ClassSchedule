@@ -1,4 +1,4 @@
-package com.example.classschedule.Presentation.Main.lessons.utils
+package com.example.classschedule.Presentation.main.lessons.utils
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -24,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.classschedule.Domain.constants.SubjectEnum
+import com.example.classschedule.R
 
 
 val arrangmentBetweenCard = 8.dp
@@ -46,7 +48,7 @@ fun SubjectsNameColumn( grades: List<Map<Int, Int>> = emptyList()) {
                 verticalArrangement = Arrangement.spacedBy(arrangmentBetweenCard)
             ) {
                 Text(
-                    text = "!Список предметов!",
+                    text = stringResource(R.string.LessonList),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -156,7 +158,7 @@ fun GradesColumn(grades: Map<Int, Double>, scrollState: ScrollState){
         .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(arrangmentBetweenCard)) {
-        Text(text = "Четвертная",
+        Text(text = stringResource(R.string.Quarter),
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 16.dp)
         )

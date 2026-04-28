@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.Data.repository.AuthRepository
 import com.example.classschedule.Presentation.navigation.Screen
-import com.example.classschedule.Presentation.util.suppabaseErrorHandler
 import com.example.classschedule.Presentation.util.UiText
+import com.example.classschedule.Presentation.util.suppabaseErrorHandler
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -34,24 +34,28 @@ class RegisterViewModel @AssistedInject constructor(
     val state = _state.asStateFlow()
 
 
-    fun onEvent(event: RegisterEvent){
-        when(event){
+    fun onEvent(event: RegisterEvent) {
+        when (event) {
             is RegisterEvent.EmailEditEvent -> {
                 _state.update { it.copy(email = event.email) }
                 canNavigate()
             }
+
             is RegisterEvent.NameEditEvent -> {
                 _state.update { it.copy(name = event.name) }
                 canNavigate()
             }
+
             is RegisterEvent.PasswordEditEvent -> {
                 _state.update { it.copy(password = event.password) }
                 canNavigate()
             }
+
             is RegisterEvent.SurnameEditEvent -> {
                 _state.update { it.copy(surname = event.surname) }
                 canNavigate()
             }
+
             is RegisterEvent.EmailFocusLostEvent -> {
                 val isValid = Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
                 _state.update { it.copy(isValidEmail = isValid) }
@@ -66,9 +70,10 @@ class RegisterViewModel @AssistedInject constructor(
                     name = state.value.name,
                     surname = state.value.surname
                 )
-                val errorUiText = isRegister.suppabaseErrorHandler(onFailure = {
-                    failuerSB()
-                }, tag = "Register"
+                val errorUiText = isRegister.suppabaseErrorHandler(
+                    onFailure = {
+                        failuerSB()
+                    }, tag = "Register"
                 ) {
                     Log.d("!!!", "Success Register")
                     navigate(Screen.Main)
@@ -80,31 +85,29 @@ class RegisterViewModel @AssistedInject constructor(
     }
 
 
-
-
     private fun failuerSB() {
         viewModelScope.launch {
             _state.update { it.copy(canNavigateToMainScreen = false) }
         }
     }
-    private fun canNavigate(){
-         if(
-             Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
-             &&
-             state.value.password.length >= 5
-             &&
-             state.value.surname.isNotBlank()
-             &&
-             state.value.name.isNotBlank()
-                 ){
-             _state.update { it.copy(canNavigateToMainScreen = true) }
-         }
-        else _state.update { it.copy(canNavigateToMainScreen = false) }
+
+    private fun canNavigate() {
+        if (
+            Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
+            &&
+            state.value.password.length >= 5
+            &&
+            state.value.surname.isNotBlank()
+            &&
+            state.value.name.isNotBlank()
+        ) {
+            _state.update { it.copy(canNavigateToMainScreen = true) }
+        } else _state.update { it.copy(canNavigateToMainScreen = false) }
     }
 
-@AssistedFactory
-interface Factory{
-    fun create(navigate: (Screen) -> Unit) : RegisterViewModel
-}
+    @AssistedFactory
+    interface Factory {
+        fun create(navigate: (Screen) -> Unit): RegisterViewModel
+    }
 
 }

@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Presentation.navigation.Screen
@@ -51,10 +50,10 @@ import com.example.classschedule.R
 
 @Composable
 fun RegisterScreen(
-    navigate : (Screen) -> Unit
+    navigate: (Screen) -> Unit
 
-){
-    val viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel, RegisterViewModel.Factory>{
+) {
+    val viewModel: RegisterViewModel = hiltViewModel<RegisterViewModel, RegisterViewModel.Factory> {
         it.create(navigate)
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -72,9 +71,9 @@ private fun RegisterView(
     navigation: (Screen) -> Unit,
     state: RegisterState,
     onEvent: (RegisterEvent) -> Unit
-){
-    var wasFocusedEmailTextField by remember{mutableStateOf(false)}
-    var wasFocusedPasswordTextField by remember{mutableStateOf(false)}
+) {
+    var wasFocusedEmailTextField by remember { mutableStateOf(false) }
+    var wasFocusedPasswordTextField by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
 
@@ -98,7 +97,8 @@ private fun RegisterView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = Modifier
-            .fillMaxSize()) {
+            .fillMaxSize()
+    ) {
         Icon(
             modifier = Modifier
                 .padding(top = 70.dp)
@@ -227,33 +227,24 @@ private fun RegisterView(
                 )
             }
         }
-            StyleButton(
-                enabled = state.canNavigateToMainScreen,
-                onClick = { onEvent(RegisterEvent.JoinButtonEvent) },
-                modifier = Modifier
-                    .width(280.dp)
-                    .height(60.dp)
-            ) {
-                Text(stringResource(R.string.Register))
-            }
-            Text(
-                text = stringResource(R.string.AlreadyHaveAcc),
-                modifier = Modifier
-                    .clickable(
-                        onClick = { navigation(Screen.DefaultEntrance) }
-                    )
-
-            )
+        StyleButton(
+            enabled = state.canNavigateToMainScreen,
+            onClick = { onEvent(RegisterEvent.JoinButtonEvent) },
+            modifier = Modifier
+                .width(280.dp)
+                .height(60.dp)
+        ) {
+            Text(stringResource(R.string.Register))
         }
+        Text(
+            text = stringResource(R.string.AlreadyHaveAcc),
+            modifier = Modifier
+                .clickable(
+                    onClick = { navigation(Screen.DefaultEntrance) }
+                )
 
-
-
-
-
-
-
-
-
+        )
+    }
 
 
 }
@@ -261,7 +252,7 @@ private fun RegisterView(
 
 @Composable
 @Preview(showBackground = true)
-fun ShowRegisterView(){
+fun ShowRegisterView() {
     RegisterView(
         navigation = {},
         viewModel = viewModel(),

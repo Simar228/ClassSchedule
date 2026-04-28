@@ -79,7 +79,7 @@ fun NoInternetScreen(
                 .fillMaxWidth()
                 .height(56.dp),
 
-        ) {
+            ) {
             Text(
                 text = "Try Again",
                 style = MaterialTheme.typography.titleMedium
@@ -90,11 +90,9 @@ fun NoInternetScreen(
 }
 
 
-
-
 @Preview(showBackground = true)
 @Composable
-private fun ShowNoInternetScreen(){
+private fun ShowNoInternetScreen() {
     NoInternetScreen {}
 
 }

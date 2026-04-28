@@ -48,17 +48,15 @@ import com.example.classschedule.Presentation.ui.utils.StyleButton
 import com.example.classschedule.R
 
 
-
-
-
 @Composable
 fun DefualtEntranceScreen(
     navigation: (Screen) -> Unit,
 
-){
-    val viewModel: DefaultEntranceViewModel = hiltViewModel<DefaultEntranceViewModel, DefaultEntranceViewModel.Factory>{
-        it.create(navigation)
-    }
+    ) {
+    val viewModel: DefaultEntranceViewModel =
+        hiltViewModel<DefaultEntranceViewModel, DefaultEntranceViewModel.Factory> {
+            it.create(navigation)
+        }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     DefaultEntranceView(
@@ -75,11 +73,11 @@ private fun DefaultEntranceView(
     state: DefualtEntranceState,
     onEvent: (DefualtEntranceEvent) -> Unit,
     viewModel: DefaultEntranceViewModel
-){
+) {
 
 
     val context = LocalContext.current
-    var wasFocusedEmail by remember{mutableStateOf(false)}
+    var wasFocusedEmail by remember { mutableStateOf(false) }
     var wasFocusedPassword by remember { mutableStateOf(false) }
 
     LaunchedEffect(viewModel.errorEvents) {
@@ -96,7 +94,8 @@ private fun DefaultEntranceView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = Modifier
-        .fillMaxSize()) {
+            .fillMaxSize()
+    ) {
         Icon(
             modifier = Modifier
                 .padding(top = 100.dp)
@@ -104,54 +103,54 @@ private fun DefaultEntranceView(
             imageVector = Icons.Default.AccountBox,
             contentDescription = null,
 
-        )
+            )
         Text(
             text = stringResource(R.string.LoginPage),
             fontSize = 40.sp
         )
-Column(
-   modifier = Modifier.animateContentSize()
-) {
-    OutlinedTextField(
+        Column(
+            modifier = Modifier.animateContentSize()
+        ) {
+            OutlinedTextField(
 
-        modifier = Modifier
-            .fillMaxWidth(0.70f)
-            .padding(top = 80.dp)
-            .onFocusChanged { focusState ->
-                if (focusState.isFocused) {
-                    wasFocusedEmail = true
-                }
-                if (!focusState.isFocused && wasFocusedEmail) {
-                    onEvent(DefualtEntranceEvent.EmailFocusLostEvent)
-                }
-            },
-        singleLine = true,
-        value = state.email,
-        onValueChange = { onEvent(DefualtEntranceEvent.EmailEditEvent(it)) },
-        placeholder = {
-            Text(text = stringResource(R.string.Email))
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next,
-            keyboardType = KeyboardType.Email
-        ),
-        isError = !state.isValidEmail,
+                modifier = Modifier
+                    .fillMaxWidth(0.70f)
+                    .padding(top = 80.dp)
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            wasFocusedEmail = true
+                        }
+                        if (!focusState.isFocused && wasFocusedEmail) {
+                            onEvent(DefualtEntranceEvent.EmailFocusLostEvent)
+                        }
+                    },
+                singleLine = true,
+                value = state.email,
+                onValueChange = { onEvent(DefualtEntranceEvent.EmailEditEvent(it)) },
+                placeholder = {
+                    Text(text = stringResource(R.string.Email))
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
+                isError = !state.isValidEmail,
 
-    )
-    AnimatedVisibility(
-        visible = !state.isValidEmail,
-        modifier = Modifier,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut(),
+                )
+            AnimatedVisibility(
+                visible = !state.isValidEmail,
+                modifier = Modifier,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut(),
 
-    ) {
-        Text(
-            text = stringResource(R.string.WrongEmail),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.error
-        )
-    }
-}
+                ) {
+                Text(
+                    text = stringResource(R.string.WrongEmail),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
         Column() {
             OutlinedTextField(
                 modifier = Modifier
@@ -182,7 +181,7 @@ Column(
                 enter = expandVertically() + fadeIn(),
                 exit = shrinkVertically() + fadeOut(),
 
-            ) {
+                ) {
                 Text(
                     text = stringResource(R.string.WrongPassword),
                     style = MaterialTheme.typography.bodySmall,
@@ -192,17 +191,18 @@ Column(
         }
         StyleButton(
             enabled = state.canNavigateToMainScreen,
-            onClick = { onEvent(DefualtEntranceEvent.LoginButtonEvent)},
+            onClick = { onEvent(DefualtEntranceEvent.LoginButtonEvent) },
             modifier = Modifier
                 .width(280.dp)
-                .height(60.dp)) {
+                .height(60.dp)
+        ) {
             Text(stringResource(R.string.Login))
         }
         Text(
             text = stringResource(R.string.HaventAcc),
             modifier = Modifier
                 .clickable(
-                    onClick = {navigation(Screen.Register)}
+                    onClick = { navigation(Screen.Register) }
                 )
 
         )
@@ -212,6 +212,6 @@ Column(
 
 @Composable
 @Preview(showBackground = true)
-fun ShowDefaultEntranceView(){
+fun ShowDefaultEntranceView() {
     DefaultEntranceView({}, DefualtEntranceState(), {}, viewModel())
 }

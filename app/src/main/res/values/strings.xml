@@ -20,4 +20,8 @@
     <string name="invalid_credentials">Invalid username or password</string>
     <string name="invalid_internet">Check your internet connection</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="LessonList">Lessons List</string>
+    <string name="HomeWork">HW: </string>
+    <string name="ExitFromAcc">Exit from account</string>
+    <string name="Quarter">the quarter</string>
 </resources>
