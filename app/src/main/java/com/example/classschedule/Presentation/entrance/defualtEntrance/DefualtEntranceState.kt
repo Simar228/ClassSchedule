@@ -4,6 +4,7 @@ data class DefualtEntranceState (
 
     val email: String = "",
     val password: String = "",
+    val validPassword: Boolean = true,
     val isValidEmail: Boolean = true,
     var canNavigateToMainScreen: Boolean = false
 

@@ -40,16 +40,16 @@ class DefaultEntranceViewModel @AssistedInject constructor(
     val state = _state.asStateFlow()
 
     fun onEvent(event: DefualtEntranceEvent) {
-        canNavigate()
+
         when (event) {
             is DefualtEntranceEvent.EmailEditEvent -> {
-
-                _state.update { it.copy(email = event.email)
+                val isValid = Patterns.EMAIL_ADDRESS.matcher(event.email).matches()
+                _state.update { it.copy(isValidEmail = isValid,email = event.email)
                 }
             }
             is DefualtEntranceEvent.PasswordEditEvent -> {
 
-                _state.update { it.copy(password = event.password) }
+                _state.update { it.copy(password = event.password, validPassword = (event.password.length >= 6)) }
 
             }
             is DefualtEntranceEvent.EmailFocusLostEvent -> {
@@ -72,6 +72,7 @@ class DefaultEntranceViewModel @AssistedInject constructor(
                 }
             }
         }
+        canNavigate()
     }
 
 
@@ -85,7 +86,7 @@ class DefaultEntranceViewModel @AssistedInject constructor(
         if(
             Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
             &&
-            state.value.password.length >= 5
+            state.value.password.length >= 6
         ){
             _state.update { it.copy(canNavigateToMainScreen = true) }
         }

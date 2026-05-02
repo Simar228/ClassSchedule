@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,43 +52,52 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ClassScheduleTheme {
-                val navController = rememberNavController()
-                var startScreen by remember { mutableStateOf<Screen?>(null) }
-                var retryTrigger by remember { mutableIntStateOf(0) }
-                val isOnline by NetworkMonitor.isAvailable.collectAsStateWithLifecycle()
-                splashScreen.setKeepOnScreenCondition {
-                    startScreen == null
-                }
-
-                LaunchedEffect(isOnline) {
-                    if (!isOnline) {
-                        navController.navigate(Screen.NoInternet)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    var startScreen by remember { mutableStateOf<Screen?>(null) }
+                    var retryTrigger by remember { mutableIntStateOf(0) }
+                    val isOnline by NetworkMonitor.isAvailable.collectAsStateWithLifecycle()
+                    splashScreen.setKeepOnScreenCondition {
+                        startScreen == null
                     }
-                }
 
-                LaunchedEffect(retryTrigger) {
-                    startScreen = tryEnter()
-                }
+                    LaunchedEffect(isOnline) {
+                        if (!isOnline) {
+                            navController.navigate(Screen.NoInternet)
+                        }
+                    }
+
+                    LaunchedEffect(retryTrigger) {
+                        startScreen = tryEnter()
+                    }
 
 
 
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    if (startScreen != null) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        containerColor = MaterialTheme.colorScheme.background
+                    ) { innerPadding ->
+                        if (startScreen != null) {
 
-                        MainContent(
-                            startScreen = startScreen!!,
-                            modifier = Modifier.padding(innerPadding),
-                            navHostController = navController,
-                            context = this@MainActivity
-                        )
+                            MainContent(
+                                startScreen = startScreen!!,
+                                modifier = Modifier.padding(innerPadding),
+                                navHostController = navController,
+                                context = this@MainActivity
+                            )
 
-                    } else {
+                        } else {
 
-                        Box(
-                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
                         }
                     }
                 }

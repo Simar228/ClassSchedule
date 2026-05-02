@@ -9,29 +9,27 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -39,12 +37,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Presentation.navigation.Screen
+import com.example.classschedule.Presentation.ui.theme.darkError
+import com.example.classschedule.Presentation.ui.theme.link
 import com.example.classschedule.Presentation.ui.utils.StyleButton
+import com.example.classschedule.Presentation.ui.utils.StyleOutlinedTextField
 import com.example.classschedule.R
 
 
@@ -60,10 +60,7 @@ fun DefualtEntranceScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     DefaultEntranceView(
-        navigation = navigation,
-        state = state,
-        onEvent = viewModel::onEvent,
-        viewModel = viewModel
+        navigation = navigation, state = state, onEvent = viewModel::onEvent, viewModel = viewModel
     )
 }
 
@@ -77,8 +74,8 @@ private fun DefaultEntranceView(
 
 
     val context = LocalContext.current
-    var wasFocusedEmail by remember { mutableStateOf(false) }
-    var wasFocusedPassword by remember { mutableStateOf(false) }
+    val wasFocusedEmail = remember { mutableStateOf(false) }
+    val wasFocusedPassword = remember { mutableStateOf(false) }
 
     LaunchedEffect(viewModel.errorEvents) {
         viewModel.errorEvents.collect { message ->
@@ -89,123 +86,110 @@ private fun DefaultEntranceView(
 
 
 
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        modifier = Modifier
-            .fillMaxSize()
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Icon(
-            modifier = Modifier
-                .padding(top = 100.dp)
-                .size(200.dp),
-            imageVector = Icons.Default.AccountBox,
-            contentDescription = null,
-
-            )
-        Text(
-            text = stringResource(R.string.LoginPage),
-            fontSize = 40.sp
-        )
         Column(
-            modifier = Modifier.animateContentSize()
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxSize()
         ) {
-            OutlinedTextField(
 
+            Icon(
                 modifier = Modifier
-                    .fillMaxWidth(0.70f)
-                    .padding(top = 80.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
-                            wasFocusedEmail = true
-                        }
-                        if (!focusState.isFocused && wasFocusedEmail) {
-                            onEvent(DefualtEntranceEvent.EmailFocusLostEvent)
-                        }
-                    },
-                singleLine = true,
-                value = state.email,
-                onValueChange = { onEvent(DefualtEntranceEvent.EmailEditEvent(it)) },
-                placeholder = {
-                    Text(text = stringResource(R.string.Email))
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
-                ),
-                isError = !state.isValidEmail,
+                    .padding(top = 150.dp)
+                    .size(160.dp),
+                imageVector = Icons.Default.PersonOutline,
+                contentDescription = null,
 
                 )
-            AnimatedVisibility(
-                visible = !state.isValidEmail,
-                modifier = Modifier,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
+            Text(
+                text = stringResource(R.string.LoginPage),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Column(
+                modifier = Modifier.animateContentSize()
+            ) {
+                Spacer(Modifier.padding(100.dp))
+                StyleOutlinedTextField(
+                    wasFocused = wasFocusedEmail,
+                    resourceStringId = R.string.Email,
+                    value = state.email,
+                    isError = !state.isValidEmail && !wasFocusedEmail.value,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next, keyboardType = KeyboardType.Email
+                    ),
+                ) { newEmail ->
+                    onEvent(DefualtEntranceEvent.EmailEditEvent(newEmail))
+                }
 
-                ) {
+                AnimatedVisibility(
+                    visible = !state.isValidEmail && !wasFocusedEmail.value,
+                    modifier = Modifier,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+
+                    ) {
+                    Text(
+                        text = stringResource(R.string.WrongEmail),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.darkError
+                    )
+                }
+            }
+            Column() {
+                StyleOutlinedTextField(
+                    showPassword = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    wasFocused = wasFocusedPassword,
+                    resourceStringId = R.string.Password,
+                    value = state.password,
+                    isError = !state.validPassword && !wasFocusedPassword.value,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
+                    ),
+                    focusLost = {}
+                ) { password ->
+                    onEvent(DefualtEntranceEvent.PasswordEditEvent(password))
+                }
+
+
+                AnimatedVisibility(
+                    visible = !state.validPassword && !wasFocusedPassword.value,
+                    modifier = Modifier,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+
+                    ) {
+                    Text(
+                        text = stringResource(R.string.WrongPassword),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.darkError
+                    )
+                }
+            }
+            StyleButton(
+                enabled = state.canNavigateToMainScreen,
+                onClick = { onEvent(DefualtEntranceEvent.LoginButtonEvent) },
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .height(56.dp)
+            ) {
                 Text(
-                    text = stringResource(R.string.WrongEmail),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    text = stringResource(R.string.Login),
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
-        }
-        Column() {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(0.70f)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
-                            wasFocusedPassword = true
-                        }
-                    },
-                value = state.password,
-                onValueChange = { onEvent(DefualtEntranceEvent.PasswordEditEvent(it)) },
-                placeholder = {
-                    Text(text = stringResource(R.string.Password))
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-
-                visualTransformation = PasswordVisualTransformation()
-
+            Text(
+                text = stringResource(R.string.HaventAcc),
+                color = MaterialTheme.colorScheme.link,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.clickable(
+                    onClick = { navigation(Screen.Register) })
 
             )
-
-            AnimatedVisibility(
-                visible = state.password.length <= 5 && wasFocusedPassword,
-                modifier = Modifier,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
-
-                ) {
-                Text(
-                    text = stringResource(R.string.WrongPassword),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
         }
-        StyleButton(
-            enabled = state.canNavigateToMainScreen,
-            onClick = { onEvent(DefualtEntranceEvent.LoginButtonEvent) },
-            modifier = Modifier
-                .width(280.dp)
-                .height(60.dp)
-        ) {
-            Text(stringResource(R.string.Login))
-        }
-        Text(
-            text = stringResource(R.string.HaventAcc),
-            modifier = Modifier
-                .clickable(
-                    onClick = { navigation(Screen.Register) }
-                )
-
-        )
     }
 }
 

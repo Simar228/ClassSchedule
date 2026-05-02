@@ -37,7 +37,8 @@ class RegisterViewModel @AssistedInject constructor(
     fun onEvent(event: RegisterEvent) {
         when (event) {
             is RegisterEvent.EmailEditEvent -> {
-                _state.update { it.copy(email = event.email) }
+                val isValid = Patterns.EMAIL_ADDRESS.matcher(event.email).matches()
+                _state.update { it.copy(email = event.email, isValidEmail = isValid) }
                 canNavigate()
             }
 
@@ -47,7 +48,7 @@ class RegisterViewModel @AssistedInject constructor(
             }
 
             is RegisterEvent.PasswordEditEvent -> {
-                _state.update { it.copy(password = event.password) }
+                _state.update { it.copy(password = event.password, isValidPassword = (event.password.length >= 6)) }
                 canNavigate()
             }
 
@@ -95,7 +96,7 @@ class RegisterViewModel @AssistedInject constructor(
         if (
             Patterns.EMAIL_ADDRESS.matcher(state.value.email).matches()
             &&
-            state.value.password.length >= 5
+            state.value.isValidPassword
             &&
             state.value.surname.isNotBlank()
             &&

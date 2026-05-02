@@ -22,8 +22,9 @@ fun StyleButton(
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            disabledContainerColor = Color.Gray,
+//            containerColor = Color(0xFF1C1C1E),
+//            contentColor = Color.White,
+            disabledContainerColor = Color(0xFFE5E5EA),
         ),
 
     ) {

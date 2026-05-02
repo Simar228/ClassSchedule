@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="main_font_family" type="font">@font/sf_regular</item>
+    <item name="small_font_family" type="font">@font/sf_light</item>
+    <item name="semi_bold_font_family" type="font">@font/sf_semibold</item>
+</resources>

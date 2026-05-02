@@ -2,36 +2,45 @@ package com.example.classschedule.Presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Color(0xFFFFFFFF),
+    secondary = Color(0xFFFFFFFF),
+    tertiary = Color(0xFFFFFFFF)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    error = ErrorColor
+    primary = Color(0xFF1C1C1E), //Основные кнопки, важные иконки или заголовки
+    secondary = Color(0xFFFFFFFF), //Менее важные кнопки или элементы, которые должны выделяться на темном фоне.
+    tertiary = Color(0xFFFFFFFF), //Акценты для нейтральных элементов (например, выбранные даты в календаре).
+    error = ErrorColor, //Текст «Неверный пароль», красные иконки, границы полей при ошибке.
+    background = Color(0xFFF2F2F7), //Самый задний фон всего экрана.
+    surface = Color(0xFFFFFFFF), //Карточки расписания, белые поля ввода, всплывающие меню.
+    onPrimary = Color.White, //Текст и иконки внутри главных кнопок (Button).
+    onSecondary = Color.White, //Текст на второстепенных элементах (маленькие кнопки, теги, значки уведомлений).
+    onTertiary = Color.White, //Цвет для контента, который лежит поверх цветов secondary и tertiary.
+    onBackground = Color(0xFF1C1B1F), //Весь основной текст на экране
+    onSurface = Color(0xFF1C1B1F), //Текст внутри карточек, диалоговых окон и полей ввода (TextField).
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
+
+
+val ColorScheme.darkError : Color
+    @Composable
+    get() = if (!isSystemInDarkTheme()) Color(0xFFB00020) else Color(0xFFB00020)
+
+val ColorScheme.link : Color
+    @Composable
+    get() = if (!isSystemInDarkTheme()) Color(0xFF007AFF) else Color(0xFF007AFF)
 
 
 
@@ -40,7 +49,7 @@ private val LightColorScheme = lightColorScheme(
 fun ClassScheduleTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
