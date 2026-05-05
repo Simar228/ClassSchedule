@@ -13,23 +13,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFFFFFFF),
-    secondary = Color(0xFFFFFFFF),
-    tertiary = Color(0xFFFFFFFF)
-)
-
-private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF1C1C1E), //Основные кнопки, важные иконки или заголовки
-    secondary = Color(0xFFFFFFFF), //Менее важные кнопки или элементы, которые должны выделяться на темном фоне.
-    tertiary = Color(0xFFFFFFFF), //Акценты для нейтральных элементов (например, выбранные даты в календаре).
+    secondary = Color(0xFF1C1C1E), //Менее важные кнопки или элементы, которые должны выделяться на темном фоне.
+    tertiary = Color(0xFFFF0000), //Акценты для нейтральных элементов (например, выбранные даты в календаре).
     error = ErrorColor, //Текст «Неверный пароль», красные иконки, границы полей при ошибке.
     background = Color(0xFFF2F2F7), //Самый задний фон всего экрана.
-    surface = Color(0xFFFFFFFF), //Карточки расписания, белые поля ввода, всплывающие меню.
+    surfaceVariant = Color(0xFFCDFF00),
+    surface = Color(0xFF0037FF), //Карточки расписания, белые поля ввода, всплывающие меню.
     onPrimary = Color.White, //Текст и иконки внутри главных кнопок (Button).
     onSecondary = Color.White, //Текст на второстепенных элементах (маленькие кнопки, теги, значки уведомлений).
     onTertiary = Color.White, //Цвет для контента, который лежит поверх цветов secondary и tertiary.
     onBackground = Color(0xFF1C1B1F), //Весь основной текст на экране
     onSurface = Color(0xFF1C1B1F), //Текст внутри карточек, диалоговых окон и полей ввода (TextField).
+
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFF1C1C1E), //Основные кнопки, важные иконки или заголовки
+    secondary = Color(0xFF1C1C1E), //Менее важные кнопки или элементы, которые должны выделяться на темном фоне.
+    tertiary = Color(0xFFFF0000), //Акценты для нейтральных элементов (например, выбранные даты в календаре).
+    error = ErrorColor, //Текст «Неверный пароль», красные иконки, границы полей при ошибке.
+    background = Color(0xFFF2F2F7), //Самый задний фон всего экрана.
+    surface = Color(0xFFF2F2F7), //Карточки расписания, белые поля ввода, всплывающие меню.
+    onPrimary = Color.White, //Текст и иконки внутри главных кнопок (Button).
+    onSecondary = Color.White, //Текст на второстепенных элементах (маленькие кнопки, теги, значки уведомлений).
+    onTertiary = Color.White, //Цвет для контента, который лежит поверх цветов secondary и tertiary.
+    onBackground = Color(0xFF1C1B1F), //Весь основной текст на экране
+    onSurface = Color(0xFF1C1B1F), //Текст внутри карточек, диалоговых окон и полей ввода (TextField).
+    onSurfaceVariant = Color(0xFF5856D6),
 
 )
 

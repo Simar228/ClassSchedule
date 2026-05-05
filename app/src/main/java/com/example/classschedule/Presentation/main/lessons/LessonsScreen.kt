@@ -15,9 +15,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.repository.LessonsRepository
+import com.example.classschedule.Presentation.ui.utils.EmptyLessonCard
 import com.example.classschedule.Presentation.ui.utils.LessonCard
 
 
@@ -70,6 +74,7 @@ private fun LessonsView(
     val itemWidth = 70.dp
     // Расчет пустого пространства по бокам, чтобы элемент мог встать ровно по центру
     val horizontalPadding = (screenWidth - itemWidth) / 2
+    var dayOfMonth = viewModel.dayOfMonth
 
 
 
@@ -93,11 +98,18 @@ private fun LessonsView(
                 items(31){_index ->
                     val index = _index + 1
                     Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor =
+                                if
+                                    (index == dayOfMonth) MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.3f )
+                        ),
                         enabled = !isLoadingLessonList,
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.size(itemWidth),
                         onClick = {
-                            viewModel.dayOfMonth = index
+                            viewModel.onDateSelected(index)
                             viewModel.getLesson(index)
                         }
                     ) {
@@ -107,13 +119,19 @@ private fun LessonsView(
                 }
             }
         }
-        items(currentLesson){lesson ->
-          LessonCard(
-              lessonName = lesson.lessonName,
-              lessonTopic = lesson.lessonTopic,
-              lessonHomeWork = lesson.lessonHomeWork,
-              grade = lesson.grade
-          )
+        if(viewModel.isLoading){
+            items(5){
+                EmptyLessonCard()
+            }
+        }else {
+            items(currentLesson) { lesson ->
+                LessonCard(
+                    lessonName = lesson.lessonName,
+                    lessonTopic = lesson.lessonTopic,
+                    lessonHomeWork = lesson.lessonHomeWork,
+                    grade = lesson.grade
+                )
+            }
         }
 
     }

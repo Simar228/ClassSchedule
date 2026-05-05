@@ -1,5 +1,6 @@
 package com.example.classschedule.Presentation.ui.utils
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.classschedule.Presentation.ui.theme.shimmerBrush
 import com.example.classschedule.R
 
 
@@ -39,10 +42,10 @@ fun LessonCard(
         modifier = Modifier
             .padding(8.dp)
             .size(width = 340.dp, height = 260.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2D2D2D),
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -63,7 +66,6 @@ fun LessonCard(
                     Text(
                         text = lessonName.toString(),
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         modifier = Modifier
@@ -71,20 +73,21 @@ fun LessonCard(
                             .padding(top = 15.dp),
                         text = lessonTopic,
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     )
                 }
 
 
                 Surface(
-                    color = Color.White.copy(alpha = 0.1f),
+
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = "${stringResource(R.string.HomeWork)} $lessonHomeWork",
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color(0xFF81D4FA)
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -96,18 +99,36 @@ fun LessonCard(
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Black,
                 color = when(result){
-                    5 -> Color.Green
-                    4 -> Color.Blue
-                    3 -> Color.Yellow
-                    2 -> Color.Red
+                    5 -> Color(0xFF34C759)
+                    4 -> Color(0xFFFFCC00)
+                    3 -> Color(0xFFFF9500)
+                    2 -> Color(0xFFFF3B30)
                     1 -> Color.Black
                     else -> {
 
-                        Color.White}
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)}
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             )
         }
+    }
+}
+
+
+@Composable
+fun EmptyLessonCard(){
+    val brush = shimmerBrush()
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .size(width = 340.dp, height = 260.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+
+    ){
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(brush))
     }
 }
 
@@ -123,3 +144,6 @@ fun PrevierwLessonsCard(){
         grade = 5
     )
 }
+
+
+

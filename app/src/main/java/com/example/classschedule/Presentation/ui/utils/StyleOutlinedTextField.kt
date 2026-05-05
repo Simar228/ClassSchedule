@@ -58,12 +58,12 @@ fun StyleOutlinedTextField(
 
             },
         colors = TextFieldDefaults.colors(
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-
             errorContainerColor = MaterialTheme.colorScheme.error,
             cursorColor = Color(0xFF007AFF),
             errorCursorColor = Color(0xFF007AFF),
@@ -75,6 +75,7 @@ fun StyleOutlinedTextField(
         onValueChange = { onValueChanged(it) },
         placeholder = {
             Text(
+                color = MaterialTheme.colorScheme.onSurface,
                 text = stringResource(resourceStringId),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp)

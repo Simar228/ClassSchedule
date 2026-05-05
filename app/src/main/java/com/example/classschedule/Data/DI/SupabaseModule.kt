@@ -9,6 +9,8 @@ import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
 import javax.inject.Singleton
 
 
@@ -28,10 +30,13 @@ object SupabaseModule {
             install(Postgrest)
             install(Auth)
             httpConfig {
+                defaultRequest {
+                    header("Connection", "close")
+                }
                 install(io.ktor.client.plugins.HttpTimeout) {
-                    requestTimeoutMillis = 30000
-                    connectTimeoutMillis = 10000
-                    socketTimeoutMillis = 30000
+                    requestTimeoutMillis = 15000L
+                    connectTimeoutMillis = 5000L
+                    socketTimeoutMillis = 8000L
                 }
             }
         }
