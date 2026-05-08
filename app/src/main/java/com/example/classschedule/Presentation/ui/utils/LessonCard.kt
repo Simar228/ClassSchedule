@@ -28,10 +28,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.classschedule.Presentation.ui.theme.shimmerBrush
 import com.example.classschedule.R
+import io.github.fletchmckee.liquid.LiquidState
+import io.github.fletchmckee.liquid.liquefiable
+import io.github.fletchmckee.liquid.rememberLiquidState
 
 
 @Composable
 fun LessonCard(
+    liquidState: LiquidState,
     lessonName: String,
     lessonTopic: String,
     lessonHomeWork: String,
@@ -40,6 +44,7 @@ fun LessonCard(
     val result = grade ?: "-"
     Card(
         modifier = Modifier
+            .liquefiable(liquidState)
             .padding(8.dp)
             .size(width = 340.dp, height = 260.dp),
         shape = RoundedCornerShape(20.dp),
@@ -116,7 +121,9 @@ fun LessonCard(
 
 
 @Composable
-fun EmptyLessonCard(){
+fun EmptyLessonCard(
+    liquidState: LiquidState
+){
     val brush = shimmerBrush()
     Card(
         modifier = Modifier
@@ -127,6 +134,7 @@ fun EmptyLessonCard(){
 
     ){
         Box(modifier = Modifier
+            .liquefiable(liquidState)
             .fillMaxSize()
             .background(brush))
     }
@@ -138,6 +146,7 @@ fun EmptyLessonCard(){
 @Preview
 fun PrevierwLessonsCard(){
     LessonCard(
+        liquidState = rememberLiquidState(),
         lessonName = "404",
         lessonTopic = "Правописание а и уyyyyyyy yyyyyyyyyeeeeeeeee eeeeeeeeeeeeeee",
         lessonHomeWork = "Диктант на странице 8 и номера с 233 по 236",

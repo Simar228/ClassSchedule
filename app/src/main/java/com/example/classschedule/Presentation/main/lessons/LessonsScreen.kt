@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,12 +36,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.repository.LessonsRepository
 import com.example.classschedule.Presentation.ui.utils.EmptyLessonCard
 import com.example.classschedule.Presentation.ui.utils.LessonCard
+import io.github.fletchmckee.liquid.LiquidState
+import io.github.fletchmckee.liquid.rememberLiquidState
 
 
 @Composable
-fun LessonsScreen() {
+fun LessonsScreen(liquidState: LiquidState) {
     val viewModel: LessonsViewModel = hiltViewModel()
-    LessonsView(viewModel = viewModel)
+    LessonsView(viewModel = viewModel, liquidState = liquidState)
 }
 
 
@@ -48,7 +51,8 @@ fun LessonsScreen() {
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun LessonsView(
-    viewModel: LessonsViewModel
+    viewModel: LessonsViewModel,
+    liquidState: LiquidState
 ) {
 
 
@@ -121,17 +125,21 @@ private fun LessonsView(
         }
         if(viewModel.isLoading){
             items(5){
-                EmptyLessonCard()
+                EmptyLessonCard(liquidState)
             }
         }else {
             items(currentLesson) { lesson ->
                 LessonCard(
+                    liquidState = liquidState,
                     lessonName = lesson.lessonName,
                     lessonTopic = lesson.lessonTopic,
                     lessonHomeWork = lesson.lessonHomeWork,
                     grade = lesson.grade
                 )
             }
+        }
+        item {
+            Spacer(modifier = Modifier.size(100.dp))
         }
 
     }
@@ -141,5 +149,5 @@ private fun LessonsView(
 @Composable
 @Preview(showBackground = true)
 private fun PreviewLessonsScreen(){
-    LessonsView(viewModel())
+    LessonsView(viewModel(), liquidState = rememberLiquidState())
 }

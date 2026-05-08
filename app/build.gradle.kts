@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-
+    implementation("io.github.fletchmckee.liquid:liquid:1.0.0")
     implementation(libs.androidx.core.splashscreen)
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime)
+    implementation(libs.runtime)
     ksp("androidx.room:room-compiler:2.6.1")
     implementation(libs.supabase.auth)
     implementation(platform(libs.bom))

@@ -18,13 +18,13 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Color(0xFFFF0000), //Акценты для нейтральных элементов (например, выбранные даты в календаре).
     error = ErrorColor, //Текст «Неверный пароль», красные иконки, границы полей при ошибке.
     background = Color(0xFFF2F2F7), //Самый задний фон всего экрана.
-    surfaceVariant = Color(0xFFCDFF00),
-    surface = Color(0xFF0037FF), //Карточки расписания, белые поля ввода, всплывающие меню.
+    surface = Color(0xFFF2F2F7), //Карточки расписания, белые поля ввода, всплывающие меню.
     onPrimary = Color.White, //Текст и иконки внутри главных кнопок (Button).
     onSecondary = Color.White, //Текст на второстепенных элементах (маленькие кнопки, теги, значки уведомлений).
     onTertiary = Color.White, //Цвет для контента, который лежит поверх цветов secondary и tertiary.
     onBackground = Color(0xFF1C1B1F), //Весь основной текст на экране
     onSurface = Color(0xFF1C1B1F), //Текст внутри карточек, диалоговых окон и полей ввода (TextField).
+    onSurfaceVariant = Color(0xFF5856D6),
 
 )
 
