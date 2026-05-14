@@ -1,5 +1,10 @@
 package com.example.classschedule.Presentation.main
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,15 +40,17 @@ fun MainScreen(
             navController = navController,
             startDestination = MainScreenNavigationRoute.MainScreen,
             modifier = Modifier.padding(innerPadding),
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(300)) }
         ) {
             composable<MainScreenNavigationRoute.MainScreen> {
                 LessonsScreen(liquidState)
             }
             composable<MainScreenNavigationRoute.GeneralEstimatesScreen> {
-                GradesScreen()
+                GradesScreen(liquidState)
             }
             composable<MainScreenNavigationRoute.ProfileScreen> {
-                ProfileScreen() { screen ->
+                ProfileScreen(liquidState) { screen ->
                     navigateTo(screen)
                 }
             }

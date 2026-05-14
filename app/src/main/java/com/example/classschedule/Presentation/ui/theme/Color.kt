@@ -20,6 +20,13 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val ErrorColor = Color(0xFFFFE5E5)
+val lightColorGrades = listOf(
+    Color(0xFF34C759),
+    Color(0xFFFFCC00),
+    Color(0xFFFF9500),
+    Color(0xFFFF3B30),
+    Color.Black,
+)
 
 
 @Composable

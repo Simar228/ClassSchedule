@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime)
     implementation(libs.runtime)
+    implementation(libs.androidx.ui.graphics)
     ksp("androidx.room:room-compiler:2.6.1")
     implementation(libs.supabase.auth)
     implementation(platform(libs.bom))
@@ -91,4 +92,5 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(kotlin("test"))
 }

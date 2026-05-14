@@ -29,14 +29,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Data.repository.LessonsRepository
+import com.example.classschedule.Presentation.main.generalEstimates.GeneralEstimatesScreen
 import com.example.classschedule.Presentation.ui.utils.EmptyLessonCard
 import com.example.classschedule.Presentation.ui.utils.LessonCard
 import io.github.fletchmckee.liquid.LiquidState
+import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
 
 
@@ -79,11 +83,14 @@ private fun LessonsView(
     // Расчет пустого пространства по бокам, чтобы элемент мог встать ровно по центру
     val horizontalPadding = (screenWidth - itemWidth) / 2
     var dayOfMonth = viewModel.dayOfMonth
+    val localDensity = LocalDensity.current
+    val fontSizeForCalendar = with(localDensity) {16.dp.toSp()}
 
 
 
     LazyColumn(
         modifier = Modifier
+            .liquefiable(liquidState)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -117,7 +124,9 @@ private fun LessonsView(
                             viewModel.getLesson(index)
                         }
                     ) {
-                        Text(text = index.toString())
+                        Text(text = index.toString(),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = fontSizeForCalendar)
                     }
 
                 }
@@ -139,7 +148,7 @@ private fun LessonsView(
             }
         }
         item {
-            Spacer(modifier = Modifier.size(100.dp))
+            Spacer(modifier = Modifier.size(130.dp))
         }
 
     }

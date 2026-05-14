@@ -45,6 +45,18 @@ private val LightColorScheme = lightColorScheme(
 )
 
 
+@Composable
+fun ColorScheme.grades(grade: Int?): Color{
+    val colors = if (!isSystemInDarkTheme()) lightColorGrades else lightColorGrades
+    return when (grade) {
+        5 -> colors[0]
+        4 -> colors[1]
+        3 -> colors[2]
+        2 -> colors[3]
+        1 -> colors[4]
+        else -> Color.Gray
+    }
+}
 val ColorScheme.darkError : Color
     @Composable
     get() = if (!isSystemInDarkTheme()) Color(0xFFB00020) else Color(0xFFB00020)

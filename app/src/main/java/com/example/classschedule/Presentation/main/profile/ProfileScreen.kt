@@ -36,27 +36,34 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Presentation.navigation.Screen
 import com.example.classschedule.R
+import io.github.fletchmckee.liquid.LiquidState
+import io.github.fletchmckee.liquid.liquefiable
+import io.github.fletchmckee.liquid.rememberLiquidState
 
 
 @Composable
 fun ProfileScreen(
-    onLogoutClick: (Screen) -> Unit
+    liquidState: LiquidState,
+    onLogoutClick: (Screen) -> Unit,
 ) {
     val viewModel: ProfileViewModel = hiltViewModel()
     ProfileView(
         viewModel = viewModel,
-        onLogoutClick = onLogoutClick
+        onLogoutClick = onLogoutClick,
+        liquidState = liquidState
     )
 }
 
 @Composable
 fun ProfileView(
     viewModel: ProfileViewModel,
-    onLogoutClick: (Screen) -> Unit
+    onLogoutClick: (Screen) -> Unit,
+    liquidState: LiquidState
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
+            .liquefiable(liquidState)
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -132,6 +139,6 @@ fun ProfileView(
 @Preview
 @Composable
 fun PreviewProfileScreen() {
-    ProfileView(viewModel(), {})
+    ProfileView(viewModel(), liquidState = rememberLiquidState(), onLogoutClick = {})
 }
 

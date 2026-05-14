@@ -248,3 +248,4 @@ fun getSubjectsWithGrades(quarter: Int): List<SubjectGrades> {
         )
     )
 }
+
