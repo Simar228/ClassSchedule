@@ -1,4 +1,21 @@
-import org.gradle.kotlin.dsl.coreLibraryDesugaring
+import java.io.FileInputStream
+import java.util.Properties
+
+// ======================================================
+// СИСТЕМА ЗАГРУЗКИ СЕКРЕТОВ (secrets.properties)
+// ======================================================
+val secretsFile = rootProject.file("secrets.properties")
+val secrets = Properties().apply {
+    if (secretsFile.exists()) {
+        load(FileInputStream(secretsFile))
+    } else {
+        println("⚠️  ВНИМАНИЕ: secrets.properties не найден. Создай его из secrets.properties.example")
+    }
+}
+
+fun getSecret(key: String, default: String = ""): String {
+    return secrets.getProperty(key, default)
+}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -26,11 +43,16 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // === Секреты из secrets.properties (Фаза 0) ===
+        buildConfigField("String", "SUPABASE_URL", "\"${getSecret("SUPABASE_URL", "https://placeholder.supabase.co")}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${getSecret("SUPABASE_KEY", "placeholder_key")}\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,13 +65,27 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true   // Нужно для BuildConfig.SUPABASE_URL и т.д.
     }
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
+
+
 dependencies {
+    // === Multiplatform Settings (нужно для сохранения сессии Supabase) ===
+    implementation("com.russhwolf:multiplatform-settings:1.1.1")
+    implementation("com.russhwolf:multiplatform-settings-no-arg:1.1.1")
+
+// === Supabase ===
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.0"))
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+
+
+// === Остальные зависимости  ===
     implementation("io.github.fletchmckee.liquid:liquid:1.0.0")
     implementation(libs.androidx.core.splashscreen)
     implementation("androidx.room:room-runtime:2.6.1")
@@ -60,21 +96,19 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.runtime)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.compose.runtime.runtime)
+    implementation(libs.androidx.credentials)
     ksp("androidx.room:room-compiler:2.6.1")
-    implementation(libs.supabase.auth)
-    implementation(platform(libs.bom))
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.0"))
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.github.jan-tennert.supabase:gotrue-kt")
+
+// Hilt
     implementation(libs.dagger.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.dagger.hilt.android)
-    ksp(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(platform(libs.bom))
-    implementation(libs.postgrest.kt)
+
+// Ktor (нужен Supabase)
     implementation(libs.ktor.client.android)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+// Compose + AndroidX
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
@@ -85,6 +119,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+// Тесты
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

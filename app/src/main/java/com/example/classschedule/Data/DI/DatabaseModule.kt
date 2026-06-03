@@ -3,7 +3,7 @@ package com.example.classschedule.Data.DI
 import android.content.Context
 import androidx.room.Room
 import com.example.classschedule.Data.database.UserDatabase
-import com.example.classschedule.Domain.dao.UserDao
+import com.example.classschedule.Data.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideUserDataBase(@ApplicationContext context: Context) : UserDatabase{
-        return Room.databaseBuilder<UserDatabase>(context, UserDatabase::class.java, "user_database.db").build()
+        return Room.databaseBuilder<UserDatabase>(context, UserDatabase::class.java, "user_database.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
     @Provides
     @Singleton

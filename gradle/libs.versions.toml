@@ -22,6 +22,8 @@ splashscreen = "1.0.1"
 runtimeVersion = "1.11.0"
 androidxRuntime = "1.11.1"
 uiGraphics = "1.11.1"
+androidxRuntimeVersion = "1.11.2"
+credentials = "1.6.0"
 
 [libraries]
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
@@ -56,6 +58,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3",
 androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtimeVersion" }
 runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidxRuntime" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
+androidx-compose-runtime-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidxRuntimeVersion" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 
 [plugins]
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

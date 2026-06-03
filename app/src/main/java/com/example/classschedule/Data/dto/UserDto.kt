@@ -10,6 +10,5 @@ data class UserDto(
     @SerialName("email")val email: String,
     @SerialName("name")val name: String,
     @SerialName("surname")val surname: String,
-    @SerialName("password")val password: String,
 
 )

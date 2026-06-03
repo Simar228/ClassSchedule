@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,12 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.Data.repository.LessonsRepository
-import com.example.classschedule.Presentation.main.generalEstimates.GeneralEstimatesScreen
 import com.example.classschedule.Presentation.ui.utils.EmptyLessonCard
 import com.example.classschedule.Presentation.ui.utils.LessonCard
 import io.github.fletchmckee.liquid.LiquidState
@@ -62,7 +58,6 @@ private fun LessonsView(
 
     var isLoadingLessonList by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    var  lessonsRepository : LessonsRepository
     val currentLesson = viewModel.currentLesson
     //с какой даты начать
     val listState = rememberLazyListState(

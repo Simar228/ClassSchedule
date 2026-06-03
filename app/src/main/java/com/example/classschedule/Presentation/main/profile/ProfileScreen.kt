@@ -34,11 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.classschedule.Domain.repository.AuthRepository
 import com.example.classschedule.Presentation.navigation.Screen
 import com.example.classschedule.R
 import io.github.fletchmckee.liquid.LiquidState
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.rememberLiquidState
+import javax.inject.Inject
 
 
 @Composable
@@ -58,7 +60,8 @@ fun ProfileScreen(
 fun ProfileView(
     viewModel: ProfileViewModel,
     onLogoutClick: (Screen) -> Unit,
-    liquidState: LiquidState
+    liquidState: LiquidState,
+
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle()
     Column(
@@ -68,7 +71,6 @@ fun ProfileView(
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Аватарка (Круглая иконка)
         Box(
             modifier = Modifier
                 .size(120.dp)
@@ -123,8 +125,7 @@ fun ProfileView(
         // 5. Кнопка выхода
         Button(
             onClick = {
-                viewModel.exitFromAcc()
-                onLogoutClick(Screen.DefaultEntrance)
+                viewModel.logOut()
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE57373)) // Красный оттенок

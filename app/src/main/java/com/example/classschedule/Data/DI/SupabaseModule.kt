@@ -1,5 +1,6 @@
 package com.example.classschedule.Data.DI
 
+import com.example.classschedule.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,21 +15,39 @@ import io.ktor.client.request.header
 import javax.inject.Singleton
 
 
+
+
 @Module
 @InstallIn(SingletonComponent::class)
 object SupabaseModule {
+
+    val supabaseUrl = BuildConfig.SUPABASE_URL
+    val supabaseKey = BuildConfig.SUPABASE_KEY
+
+
 
 
     @OptIn(SupabaseInternal::class)
     @Singleton
     @Provides
     fun provideSupabaseClient(): SupabaseClient {
+
+        require(!supabaseUrl.contains("placeholder", ignoreCase = true)) {
+            "Supabase URL не настроен. Создай файл secrets.properties из secrets.properties.example и заполни реальные значения."
+        }
+
+        require(!supabaseKey.contains("placeholder", ignoreCase = true)) {
+            "Supabase Key не настроен. Создай файл secrets.properties из secrets.properties.example и заполни реальные значения."
+        }
+
         return createSupabaseClient(
-            supabaseUrl = "https://rehupmfrntrwlykqjwna.supabase.co",
-            supabaseKey = "sb_publishable_Kmm6ke7t5yKvsT36jcFO0g_f8SIFi32"
+            supabaseUrl = supabaseUrl,
+            supabaseKey = supabaseKey
         ) {
             install(Postgrest)
-            install(Auth)
+            install(Auth) {
+                alwaysAutoRefresh = true
+            }
             httpConfig {
                 defaultRequest {
                     header("Connection", "close")

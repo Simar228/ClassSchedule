@@ -1,5 +1,12 @@
 package com.example.classschedule.Presentation.ui.utils
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,13 +34,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.classschedule.Presentation.ui.theme.darkError
+import com.example.classschedule.R
 
 @Composable
 fun StyleOutlinedTextField(
+    animateErrorText: String = "",
     showPassword: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isError: Boolean = false,
-    focusLost: () -> Unit = {},
     wasFocused: MutableState<Boolean>? = null,
     resourceStringId: Int,
     value: String,
@@ -42,62 +51,72 @@ fun StyleOutlinedTextField(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
+    Column(modifier = Modifier.animateContentSize()) {
+        OutlinedTextField(
 
-    OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .clip(RoundedCornerShape(12.dp))
+                .onFocusChanged { focusState ->
+                    wasFocused?.let { wasFocused ->
+                        wasFocused.value = focusState.isFocused
+                    }
 
-        modifier = Modifier
-            .fillMaxWidth(0.85f)
-            .clip(RoundedCornerShape(12.dp))
-            .onFocusChanged { focusState ->
-                wasFocused?.let { wasFocused ->
-                    wasFocused.value = focusState.isFocused
-                    if (!focusState.isFocused && wasFocused.value) {
-                        focusLost()
+                },
+            colors = TextFieldDefaults.colors(
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorContainerColor = MaterialTheme.colorScheme.error,
+                cursorColor = Color(0xFF007AFF),
+                errorCursorColor = Color(0xFF007AFF),
+                focusedTextColor = Color.Black,
+                errorIndicatorColor = Color.Transparent
+            ),
+            singleLine = true,
+            value = value,
+            onValueChange = { onValueChanged(it) },
+            placeholder = {
+                Text(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    text = stringResource(resourceStringId),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            },
+            keyboardOptions = keyboardOptions,
+            isError = isError,
+            trailingIcon = {
+                if (showPassword) {
+                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        Icon(
+                            imageVector = if (isPasswordVisible) Icons.Default.PanoramaFishEye else Icons.Default.RemoveRedEye,
+                            contentDescription = null,
+                            tint = Color(0xFF8E8E93)
+                        )
                     }
                 }
-
             },
-        colors = TextFieldDefaults.colors(
-            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorContainerColor = MaterialTheme.colorScheme.error,
-            cursorColor = Color(0xFF007AFF),
-            errorCursorColor = Color(0xFF007AFF),
-            focusedTextColor = Color.Black,
-            errorIndicatorColor = Color.Transparent
-        ),
-        singleLine = true,
-        value = value,
-        onValueChange = { onValueChanged(it) },
-        placeholder = {
+            visualTransformation = if (showPassword) {
+                if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+            } else {
+                visualTransformation
+            },
+        )
+        AnimatedVisibility(
+            visible = isError,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+
+            ) {
             Text(
-                color = MaterialTheme.colorScheme.onSurface,
-                text = stringResource(resourceStringId),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 16.dp)
+                text = animateErrorText,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.darkError
             )
-        },
-        keyboardOptions = keyboardOptions,
-        isError = isError,
-        trailingIcon = {
-            if (showPassword) {
-                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) Icons.Default.PanoramaFishEye else Icons.Default.RemoveRedEye,
-                        contentDescription = null,
-                        tint = Color(0xFF8E8E93)
-                    )
-                }
-            }
-        },
-        visualTransformation = if (showPassword) {
-            if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
-        } else {
-            visualTransformation
-        },
-    )
+        }
+    }
 }

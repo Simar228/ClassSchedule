@@ -1,21 +1,58 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ============================================
+# Базовые правила для продакшена
+# ============================================
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Сохраняем номера строк для краш-репортов (очень рекомендуется)
+-keepattributes SourceFile,LineNumberTable
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ============================================
+# Hilt
+# ============================================
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ============================================
+# Compose
+# ============================================
+-keep class androidx.compose.** { *; }
+-keep class androidx.compose.runtime.** { *; }
+
+# ============================================
+# Kotlin Serialization + Supabase Postgrest
+# ============================================
+# Сохраняем все data class'ы, которые используются с Supabase (очень важно)
+-keep class com.example.classschedule.Data.dto.** { *; }
+-keep class com.example.classschedule.Data.database.** { *; }
+
+# Сохраняем kotlinx.serialization
+-keep class kotlinx.serialization.** { *; }
+-keepclassmembers class * {
+    @kotlinx.serialization.SerialName <fields>;
+}
+
+# ============================================
+# Ktor + Supabase
+# ============================================
+-keep class io.ktor.** { *; }
+-keep class io.github.jan.supabase.** { *; }
+
+# ============================================
+# Room
+# ============================================
+-keep class * extends androidx.room.RoomDatabase { *; }
+-keep class * extends androidx.room.Entity { *; }
+
+# ============================================
+# Russhwolf Multiplatform Settings (если будешь использовать)
+# ============================================
+-keep class com.russhwolf.settings.** { *; }
+
+# ============================================
+# Общие правила
+# ============================================
+# Сохраняем ViewModel'ы (на всякий случай)
+-keep class * extends androidx.lifecycle.ViewModel { *; }
+
+# Не обфусцируем имена enum'ов (SubjectEnum и т.д.)
+-keepclassmembers enum * { *; }

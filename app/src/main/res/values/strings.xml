@@ -24,4 +24,7 @@
     <string name="HomeWork">HW: </string>
     <string name="ExitFromAcc">Exit from account</string>
     <string name="Quarter">the quarter</string>
+    <string name="yourAverageGrade">Your average grade</string>
+    <string name="great">Cool!</string>
+    <string name="myGrades">My grades</string>
 </resources>

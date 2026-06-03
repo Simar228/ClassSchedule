@@ -42,7 +42,7 @@ fun GradeIcon(date: Int, grade: Int) {
         }
         Text(
             text = (date + 1).toString(),
-            fontSize = 7.sp,
+            fontSize = 14.sp,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

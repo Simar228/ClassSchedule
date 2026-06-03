@@ -1,12 +1,6 @@
 package com.example.classschedule.Presentation.entrance.register
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +36,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.Presentation.navigation.Screen
-import com.example.classschedule.Presentation.ui.theme.darkError
 import com.example.classschedule.Presentation.ui.theme.link
 import com.example.classschedule.Presentation.ui.utils.StyleButton
 import com.example.classschedule.Presentation.ui.utils.StyleOutlinedTextField
@@ -128,66 +120,35 @@ private fun RegisterView(
 
             ) { onEvent(RegisterEvent.SurnameEditEvent(it)) }
 
-
-
-            Column(
-                modifier = Modifier
-                    .animateContentSize()
-            ) {
-                StyleOutlinedTextField(
-                    isError = !state.isValidEmail && !wasFocusedEmailTextField.value,
-                    wasFocused = wasFocusedEmailTextField,
-                    resourceStringId = R.string.Email,
-                    value = state.email,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Email
-                    )
-                ) { onEvent(RegisterEvent.EmailEditEvent(it)) }
-                AnimatedVisibility(
-                    visible = !state.isValidEmail && !wasFocusedEmailTextField.value,
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut()
-                ) {
-                    Text(
-                        text = stringResource(R.string.WrongEmail),
-                        color = MaterialTheme.colorScheme.darkError,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .animateContentSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                StyleOutlinedTextField(
-                    showPassword = true,
-                    visualTransformation = PasswordVisualTransformation(),
-                    isError = !state.isValidPassword && !wasFocusedPasswordTextField.value,
-                    wasFocused = wasFocusedPasswordTextField,
-                    resourceStringId = R.string.Password,
-                    value = state.password,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                ) { onEvent(RegisterEvent.PasswordEditEvent(it)) }
-
-                AnimatedVisibility(
-                    visible = !state.isValidPassword && !wasFocusedPasswordTextField.value,
-                    enter = expandVertically() + fadeIn(),
-                    exit = shrinkVertically() + fadeOut(),
+            StyleOutlinedTextField(
+                animateErrorText = stringResource(R.string.WrongEmail),
+                isError = !state.isValidEmail && !wasFocusedEmailTextField.value,
+                wasFocused = wasFocusedEmailTextField,
+                resourceStringId = R.string.Email,
+                value = state.email,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
                 )
-                {
-                    Text(
-                        text = stringResource(R.string.ShortPassword),
-                        color = MaterialTheme.colorScheme.darkError,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            }
+            ) { onEvent(RegisterEvent.EmailEditEvent(it)) }
+
+
+
+
+            StyleOutlinedTextField(
+                animateErrorText = stringResource(R.string.ShortPassword),
+                showPassword = true,
+                visualTransformation = PasswordVisualTransformation(),
+                isError = !state.isValidPassword && !wasFocusedPasswordTextField.value,
+                wasFocused = wasFocusedPasswordTextField,
+                resourceStringId = R.string.Password,
+                value = state.password,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+            ) { onEvent(RegisterEvent.PasswordEditEvent(it)) }
+
             StyleButton(
                 enabled = state.canNavigateToMainScreen,
                 onClick = { onEvent(RegisterEvent.JoinButtonEvent) },
@@ -209,7 +170,6 @@ private fun RegisterView(
             )
         }
     }
-
 }
 
 

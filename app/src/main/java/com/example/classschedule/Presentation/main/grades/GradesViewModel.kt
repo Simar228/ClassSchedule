@@ -2,8 +2,8 @@ package com.example.classschedule.Presentation.main.grades
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.Data.repository.GradesRepository
-import com.example.classschedule.Presentation.util.suppabaseErrorHandler
+import com.example.classschedule.Domain.usecase.grade.GetGradesUseCase
+import com.example.classschedule.Presentation.util.supabaseErrorHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,10 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GradesViewModel @Inject constructor(
-    private val gradesRepository: GradesRepository
+    private val getGradesUseCase: GetGradesUseCase
 ) : ViewModel() {
-
-
     var fetchJob : Job? = null
     private val _grades = MutableStateFlow<List<Map<Int, Int>>>(emptyList())
     val grades = _grades.asStateFlow()
@@ -32,8 +30,8 @@ class GradesViewModel @Inject constructor(
         }
     }
     suspend fun getGrades(){
-        val grades = gradesRepository.getGrades()
-        grades.suppabaseErrorHandler(tag = "Grades") {
+        val grades = getGradesUseCase()
+        grades.supabaseErrorHandler(tag = "Grades") {
 
             val gradesList = grades
             _grades.value = gradesList.getOrElse { emptyList() }

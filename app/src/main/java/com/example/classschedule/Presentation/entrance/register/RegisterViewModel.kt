@@ -4,15 +4,16 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.Data.repository.AuthRepository
+import com.example.classschedule.Domain.model.User
+import com.example.classschedule.Domain.provider.CurrentUserProvider
+import com.example.classschedule.Domain.usecase.auth.RegisterUseCase
 import com.example.classschedule.Presentation.navigation.Screen
 import com.example.classschedule.Presentation.util.UiText
-import com.example.classschedule.Presentation.util.suppabaseErrorHandler
+import com.example.classschedule.Presentation.util.supabaseErrorHandler
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jan.supabase.SupabaseClient
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,8 +23,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = RegisterViewModel.Factory::class)
 class RegisterViewModel @AssistedInject constructor(
-    val supabaseClient: SupabaseClient,
-    val authRepository: AuthRepository,
+    private val currentUserProvider: CurrentUserProvider,
+    val registerUseCase: RegisterUseCase,
     @Assisted val navigate: (Screen) -> Unit
 ) : ViewModel() {
 
@@ -65,18 +66,20 @@ class RegisterViewModel @AssistedInject constructor(
 
             is RegisterEvent.JoinButtonEvent -> viewModelScope.launch {
                 _state.update { it.copy(canNavigateToMainScreen = false) }
-                val isRegister = authRepository.register(
+                val isRegister = registerUseCase(
                     email = state.value.email,
                     password = state.value.password,
                     name = state.value.name,
                     surname = state.value.surname
                 )
-                val errorUiText = isRegister.suppabaseErrorHandler(
+                val errorUiText = isRegister.supabaseErrorHandler(
                     onFailure = {
                         failuerSB()
                     }, tag = "Register"
                 ) {
-                    Log.d("!!!", "Success Register")
+                    viewModelScope.launch {
+                       currentUserProvider.getCurrentUserProfile()
+                    }
                     navigate(Screen.Main)
                 }
                 _errorEvents.send(errorUiText)

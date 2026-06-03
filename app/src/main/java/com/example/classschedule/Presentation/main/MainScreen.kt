@@ -1,7 +1,5 @@
 package com.example.classschedule.Presentation.main
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,7 +45,10 @@ fun MainScreen(
                 LessonsScreen(liquidState)
             }
             composable<MainScreenNavigationRoute.GeneralEstimatesScreen> {
-                GradesScreen(liquidState)
+                GradesScreen(
+                    liquidState,
+                    navController
+                )
             }
             composable<MainScreenNavigationRoute.ProfileScreen> {
                 ProfileScreen(liquidState) { screen ->
@@ -58,7 +59,7 @@ fun MainScreen(
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
-        ){
+        ) {
             MyBottomNavigation(navController, liquidState)
         }
 
